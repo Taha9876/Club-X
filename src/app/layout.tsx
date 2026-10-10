@@ -4,9 +4,8 @@ import "./globals.css";
 import { site } from "@/lib/site";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
-import SmoothScroll from "@/components/layout/SmoothScroll";
 import ScrollProgress from "@/components/layout/ScrollProgress";
-import Preloader from "@/components/layout/Preloader";
+import RevealObserver from "@/components/layout/RevealObserver";
 
 const anton = Anton({
   subsets: ["latin"],
@@ -21,23 +20,26 @@ const inter = Inter({
   display: "swap",
 });
 
+const title = `${site.name} — 24/7 Gym, Snooker & Games in H-13 Islamabad`;
+
 export const metadata: Metadata = {
   metadataBase: new URL("https://clubx.pk"),
   title: {
-    default: `${site.name} — Gym, Snooker & Lounge in H-13 Islamabad`,
+    default: title,
     template: `%s | ${site.name} H-13`,
   },
   description: site.description,
   keywords: [
     "gym in H-13 Islamabad",
     "Club X gym",
+    "24/7 gym Islamabad",
     "NUST gym",
     "personal trainer Islamabad",
     "snooker H-13",
-    "fitness club Islamabad",
+    "ladies gym timing Islamabad",
   ],
   openGraph: {
-    title: `${site.name} — Gym, Snooker & Lounge in H-13 Islamabad`,
+    title,
     description: site.description,
     type: "website",
     locale: "en_PK",
@@ -54,10 +56,11 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${anton.variable} ${inter.variable}`}>
+    // The inline script below adds a class to <html> before hydration.
+    <html lang="en" className={`${anton.variable} ${inter.variable}`} suppressHydrationWarning>
       <head>
         {/*
-          Flags JS before first paint so `[data-anim]` elements can start hidden
+          Flags JS before first paint so scroll-reveal elements can start hidden
           without a flash. Without JS the rule never applies and content shows.
         */}
         <script
@@ -67,12 +70,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
       </head>
       <body className="min-h-screen bg-ink antialiased">
-        <Preloader />
-        <SmoothScroll />
         <ScrollProgress />
         <Navbar />
         <main id="main">{children}</main>
         <Footer />
+        <RevealObserver />
       </body>
     </html>
   );

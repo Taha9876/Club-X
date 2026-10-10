@@ -8,7 +8,7 @@ export default function Pricing({ showAddOns = true }: { showAddOns?: boolean })
     <section className="relative overflow-hidden bg-ink py-24 lg:py-32" id="pricing">
       <div className="grid-bg grid-bg-fade pointer-events-none absolute inset-0 opacity-50" aria-hidden />
       <div
-        className="pointer-events-none absolute left-1/2 top-0 h-72 w-[700px] -translate-x-1/2 rounded-full bg-brand/12 blur-[120px]"
+        className="glow pointer-events-none absolute -top-40 left-1/2 h-96 w-[800px] -translate-x-1/2 opacity-70"
         aria-hidden
       />
 
@@ -16,17 +16,17 @@ export default function Pricing({ showAddOns = true }: { showAddOns?: boolean })
         <SectionHeading
           eyebrow="Membership"
           title="Pick a plan. Show up."
-          description="No lock-ins you did not ask for and no hidden joining fee. Every plan includes a free induction session so you start with a programme, not a guess."
+          description="Every plan opens the full gym floor, 24 hours a day. Message us on WhatsApp for the current packages and any running offers."
           align="center"
         />
 
-        <Reveal className="mt-16 grid gap-5 lg:grid-cols-3" stagger={0.12}>
+        <Reveal className="mt-16 grid gap-5 lg:grid-cols-3" stagger>
           {plans.map((plan) => (
             <article
               key={plan.name}
-              className={`group relative flex flex-col border p-8 transition-all duration-500 clip-corner ${
+              className={`group relative flex flex-col border p-8 transition-colors duration-500 clip-corner ${
                 plan.featured
-                  ? "border-brand/60 bg-surface shadow-[0_0_60px_-20px_rgba(225,15,33,0.6)] lg:-translate-y-4"
+                  ? "border-brand/60 bg-surface lg:-translate-y-4"
                   : "border-line bg-ink-2 hover:border-line-2"
               }`}
             >
@@ -87,7 +87,7 @@ export default function Pricing({ showAddOns = true }: { showAddOns?: boolean })
         </Reveal>
 
         {showAddOns && (
-          <Reveal className="mt-16 grid gap-px border border-line bg-line sm:grid-cols-2 lg:grid-cols-4" stagger={0.08}>
+          <Reveal className="mt-16 grid gap-px border border-line bg-line sm:grid-cols-2 lg:grid-cols-4" stagger>
             {addOns.map((a) => (
               <div key={a.name} className="bg-ink px-6 py-7 transition-colors duration-500 hover:bg-surface">
                 <h4 className="text-sm font-semibold text-chalk">{a.name}</h4>

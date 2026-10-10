@@ -21,6 +21,7 @@
 
 :root {
   color-scheme: dark;
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 html {
@@ -101,15 +102,10 @@ body {
     0 0 60px rgba(225, 15, 33, 0.25);
 }
 
-.grain::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  z-index: 30;
-  opacity: 0.2;
-  mix-blend-mode: overlay;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+/* Soft red glow. A gradient paints once; the blur() filters it replaces had to
+   be re-rasterised on every scroll frame. */
+@utility glow {
+  background-image: radial-gradient(closest-side, rgba(225, 15, 33, 0.2), transparent);
 }
 
 /* Faint technical grid used behind dark sections */
@@ -168,7 +164,7 @@ body {
   }
 }
 .animate-pulse-ring {
-  animation: pulse-ring 2.6s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+  animation: pulse-ring 2.6s var(--ease-out-expo) infinite;
 }
 
 @keyframes spin-slow {
@@ -179,26 +175,142 @@ body {
 .animate-spin-slow {
   animation: spin-slow 22s linear infinite;
 }
-.animate-spin-slower {
-  animation: spin-slow 40s linear infinite;
-}
 
-@keyframes float-y {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-14px);
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(26px);
   }
 }
-.animate-float {
-  animation: float-y 7s ease-in-out infinite;
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
 }
 
-/* Elements animated in by GSAP start hidden, but stay visible if JS never runs */
-.js-ready [data-anim] {
+@keyframes word-up {
+  from {
+    transform: translateY(112%);
+  }
+}
+
+@keyframes wipe-down {
+  from {
+    clip-path: inset(0 0 100% 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+/* Plays on first paint — used above the fold, so it must not wait for JS. */
+.rise {
+  animation: rise-in 0.7s var(--ease-out-expo) backwards;
+  animation-delay: var(--d, 0s);
+}
+.fade {
+  animation: fade-in 0.6s ease-out backwards;
+  animation-delay: var(--d, 0s);
+}
+.wipe-down {
+  animation: wipe-down 0.5s var(--ease-out-expo) backwards;
+}
+
+/* ---------- Scroll reveals ----------
+   One IntersectionObserver (RevealObserver) adds `.is-in`; the motion itself is
+   CSS. Elements only start hidden once JS is confirmed, so no-JS visitors still
+   see everything. */
+.js-ready [data-reveal]:not(.is-in),
+.js-ready [data-reveal-stagger]:not(.is-in) > * {
   opacity: 0;
+}
+
+.js-ready [data-reveal].is-in {
+  animation: rise-in 0.7s var(--ease-out-expo) backwards;
+  animation-delay: var(--d, 0s);
+}
+
+.js-ready [data-reveal-stagger].is-in > * {
+  animation: rise-in 0.7s var(--ease-out-expo) backwards;
+}
+.js-ready [data-reveal-stagger].is-in > :nth-child(2) {
+  animation-delay: 0.07s;
+}
+.js-ready [data-reveal-stagger].is-in > :nth-child(3) {
+  animation-delay: 0.14s;
+}
+.js-ready [data-reveal-stagger].is-in > :nth-child(4) {
+  animation-delay: 0.21s;
+}
+.js-ready [data-reveal-stagger].is-in > :nth-child(5) {
+  animation-delay: 0.28s;
+}
+.js-ready [data-reveal-stagger].is-in > :nth-child(n + 6) {
+  animation-delay: 0.35s;
+}
+
+/* Masked word-by-word heading reveal */
+.word-mask {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: bottom;
+  padding-bottom: 0.12em;
+}
+.word-mask > span {
+  display: inline-block;
+}
+.js-ready [data-reveal-words]:not(.is-in) .word-mask > span {
+  transform: translateY(112%);
+}
+.js-ready [data-reveal-words].is-in .word-mask > span {
+  animation: word-up 0.8s var(--ease-out-expo) backwards;
+  animation-delay: calc(var(--i, 0) * 55ms);
+}
+
+/* ---------- Off-screen sections ----------
+   Sections below the fold skip layout and paint until they are about to scroll
+   into view, which is most of the page on first load. `contain: paint` comes
+   with it and would trap a position:fixed child, so a section that opens an
+   overlay (the gallery lightbox) opts out with data-no-cv. */
+main > section:not(:first-child):not([data-no-cv]),
+footer {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 900px;
+}
+
+/* ---------- Scroll progress rail (compositor-driven, no JS) ---------- */
+@keyframes grow-x {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+.scroll-progress {
+  display: none;
+}
+@supports (animation-timeline: scroll()) {
+  .scroll-progress {
+    display: block;
+    transform-origin: left;
+    animation: grow-x linear both;
+    animation-timeline: scroll(root);
+  }
+}
+
+/* ---------- Accordion ---------- */
+.accordion-panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.35s ease;
+}
+.accordion-panel[data-open="true"] {
+  grid-template-rows: 1fr;
+}
+.accordion-panel > div {
+  overflow: hidden;
 }
 
 /* ---------- Accessibility ---------- */
@@ -207,13 +319,10 @@ body {
   *::before,
   *::after {
     animation-duration: 0.001ms !important;
+    animation-delay: 0s !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
     scroll-behavior: auto !important;
-  }
-  .js-ready [data-anim] {
-    opacity: 1 !important;
-    transform: none !important;
   }
 }
 

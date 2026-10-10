@@ -1,64 +1,53 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
-import { gsap, useGSAP, EASE_EXPO, prefersReducedMotion } from "@/lib/gsap";
+import { useEffect, useState } from "react";
 import { testimonials } from "@/lib/site";
 import SectionHeading from "@/components/ui/SectionHeading";
 
-const AUTOPLAY_MS = 6500;
+const AUTOPLAY_MS = 7000;
 
 export default function Testimonials() {
   const [index, setIndex] = useState(0);
   const [paused, setPaused] = useState(false);
-  const quoteRef = useRef<HTMLDivElement>(null);
-  const root = useRef<HTMLDivElement>(null);
 
-  const go = useCallback((next: number) => {
+  const go = (next: number) =>
     setIndex((next + testimonials.length) % testimonials.length);
-  }, []);
 
   /* Autoplay, paused while the visitor is interacting with the block. */
   useEffect(() => {
     if (paused) return;
-    const id = window.setInterval(() => go(index + 1), AUTOPLAY_MS);
+    const id = window.setInterval(
+      () => setIndex((i) => (i + 1) % testimonials.length),
+      AUTOPLAY_MS,
+    );
     return () => window.clearInterval(id);
-  }, [index, paused, go]);
-
-  /* Crossfade the active quote whenever the index changes. */
-  useGSAP(
-    () => {
-      if (!quoteRef.current || prefersReducedMotion()) return;
-      gsap.fromTo(
-        quoteRef.current.children,
-        { y: 26, opacity: 0 },
-        { y: 0, opacity: 1, duration: 0.8, stagger: 0.06, ease: EASE_EXPO },
-      );
-    },
-    { dependencies: [index], scope: root },
-  );
+  }, [paused]);
 
   const active = testimonials[index];
 
   return (
     <section
-      ref={root}
       className="relative overflow-hidden border-y border-line bg-ink-2 py-24 lg:py-32"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
       <div
-        className="pointer-events-none absolute -left-32 top-1/2 h-96 w-96 -translate-y-1/2 rounded-full bg-brand/10 blur-[120px]"
+        className="glow pointer-events-none absolute -left-40 top-1/2 h-[520px] w-[520px] -translate-y-1/2 opacity-60"
         aria-hidden
       />
 
       <div className="container-x relative grid gap-12 lg:grid-cols-12">
         <div className="lg:col-span-4">
-          <SectionHeading eyebrow="Member voices" title="What the floor says" />
-          <div className="mt-10 flex items-center gap-3">
+          <SectionHeading eyebrow="Google reviews" title="What members say" />
+          <p className="mt-6 text-sm text-muted">
+            Rated <span className="font-semibold text-chalk">4.3 / 5</span> across 83 Google
+            reviews.
+          </p>
+          <div className="mt-8 flex items-center gap-3">
             <button
               type="button"
               onClick={() => go(index - 1)}
-              aria-label="Previous testimonial"
+              aria-label="Previous review"
               className="grid h-12 w-12 place-items-center border border-line-2 text-chalk transition-colors hover:border-brand hover:bg-brand hover:text-white clip-corner-sm"
             >
               ←
@@ -66,7 +55,7 @@ export default function Testimonials() {
             <button
               type="button"
               onClick={() => go(index + 1)}
-              aria-label="Next testimonial"
+              aria-label="Next review"
               className="grid h-12 w-12 place-items-center border border-line-2 text-chalk transition-colors hover:border-brand hover:bg-brand hover:text-white clip-corner-sm"
             >
               →
@@ -86,8 +75,9 @@ export default function Testimonials() {
               &rdquo;
             </span>
 
-            <div ref={quoteRef} aria-live="polite">
-              <blockquote className="relative text-xl leading-relaxed text-chalk sm:text-2xl lg:text-[1.7rem] lg:leading-[1.45]">
+            {/* Keyed so the entrance replays whenever the quote changes */}
+            <div key={index} className="rise min-h-[15rem] sm:min-h-[13rem]" aria-live="polite">
+              <blockquote className="relative text-lg leading-relaxed text-chalk sm:text-xl lg:text-2xl lg:leading-[1.5]">
                 {active.quote}
               </blockquote>
               <div className="mt-8 flex items-center gap-4">
@@ -106,7 +96,7 @@ export default function Testimonials() {
                   key={t.name}
                   type="button"
                   onClick={() => go(i)}
-                  aria-label={`Show testimonial ${i + 1}`}
+                  aria-label={`Show review ${i + 1}`}
                   className={`h-[3px] flex-1 transition-colors duration-500 ${
                     i === index ? "bg-brand" : "bg-line hover:bg-line-2"
                   }`}

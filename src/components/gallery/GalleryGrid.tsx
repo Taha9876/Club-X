@@ -1,47 +1,39 @@
 "use client";
 
 import Image from "next/image";
-import { useMemo, useRef, useState } from "react";
-import { gsap, useGSAP, EASE_EXPO, prefersReducedMotion } from "@/lib/gsap";
+import { useEffect, useMemo, useState } from "react";
 import { gallery } from "@/lib/site";
 
-const spanClass: Record<string, string> = {
-  wide: "sm:col-span-2",
-  tall: "sm:row-span-2",
-  normal: "",
-};
+const TAGS = ["All", ...Array.from(new Set(gallery.map((g) => g.tag)))];
 
 export default function GalleryGrid() {
-  const tags = useMemo(() => ["All", ...Array.from(new Set(gallery.map((g) => g.tag)))], []);
   const [filter, setFilter] = useState("All");
   const [lightbox, setLightbox] = useState<number | null>(null);
-  const root = useRef<HTMLDivElement>(null);
 
   const items = useMemo(
     () => (filter === "All" ? gallery : gallery.filter((g) => g.tag === filter)),
     [filter],
   );
 
-  /* Re-stagger the grid whenever the filter changes. */
-  useGSAP(
-    () => {
-      if (prefersReducedMotion()) return;
-      gsap.fromTo(
-        "[data-tile]",
-        { y: 34, opacity: 0, scale: 0.97 },
-        { y: 0, opacity: 1, scale: 1, duration: 0.75, stagger: 0.045, ease: EASE_EXPO },
-      );
-    },
-    { dependencies: [filter], scope: root },
-  );
-
   const active = lightbox === null ? null : items[lightbox];
 
+  /* Keyboard control while the lightbox is open. */
+  useEffect(() => {
+    if (lightbox === null) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setLightbox(null);
+      if (e.key === "ArrowRight") setLightbox((i) => ((i ?? 0) + 1) % items.length);
+      if (e.key === "ArrowLeft") setLightbox((i) => ((i ?? 0) - 1 + items.length) % items.length);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [lightbox, items.length]);
+
   return (
-    <div ref={root}>
+    <div>
       {/* Filters */}
       <div className="flex flex-wrap gap-2">
-        {tags.map((tag) => (
+        {TAGS.map((tag) => (
           <button
             key={tag}
             type="button"
@@ -60,32 +52,30 @@ export default function GalleryGrid() {
         ))}
       </div>
 
-      {/* Grid */}
-      <div className="mt-10 grid auto-rows-[12rem] grid-cols-1 gap-3 sm:grid-cols-2 sm:auto-rows-[13rem] lg:grid-cols-3 lg:gap-4 xl:grid-cols-4">
+      {/* Grid — keyed on the filter so the tiles cascade in again when it changes */}
+      <div
+        key={filter}
+        className="mt-10 grid grid-cols-2 gap-3 lg:grid-cols-3 lg:gap-4 xl:grid-cols-4"
+      >
         {items.map((item, i) => (
           <button
-            key={item.src + i}
-            data-tile
+            key={item.alt}
             type="button"
             onClick={() => setLightbox(i)}
             aria-label={`Open ${item.alt}`}
-            className={`group relative overflow-hidden border border-line bg-surface clip-corner-sm ${
-              spanClass[item.span]
-            }`}
+            style={{ "--d": `${Math.min(i, 8) * 0.04}s` } as React.CSSProperties}
+            className="rise group relative aspect-4/5 overflow-hidden border border-line bg-surface clip-corner-sm"
           >
             <Image
-              src={`${item.src}?q=80&w=1200`}
+              src={item.src}
               alt={item.alt}
               fill
-              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-              className="object-cover opacity-70 transition-all duration-700 [filter:grayscale(1)] group-hover:scale-105 group-hover:opacity-100 group-hover:[filter:grayscale(0)]"
+              placeholder="blur"
+              sizes="(max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw"
+              className="object-cover transition-[scale] duration-700 group-hover:scale-105"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-ink/85 via-transparent to-transparent" />
-            <span className="absolute bottom-3 left-3 text-[0.6rem] font-semibold uppercase tracking-[0.2em] text-muted transition-colors group-hover:text-brand">
+            <span className="absolute left-3 top-3 bg-ink/85 px-2 py-1 text-[0.55rem] font-semibold uppercase tracking-[0.2em] text-muted transition-colors group-hover:text-brand">
               {item.tag}
-            </span>
-            <span className="absolute right-3 top-3 grid h-8 w-8 place-items-center border border-white/20 text-xs text-white opacity-0 transition-opacity duration-500 group-hover:opacity-100">
-              +
             </span>
           </button>
         ))}
@@ -94,26 +84,20 @@ export default function GalleryGrid() {
       {/* Lightbox */}
       {active && (
         <div
-          className="fixed inset-0 z-[90] flex items-center justify-center bg-ink/95 p-4 backdrop-blur-md sm:p-10"
+          className="fade fixed inset-0 z-[90] flex items-center justify-center bg-ink/95 p-4 sm:p-10"
           role="dialog"
           aria-modal="true"
           aria-label={active.alt}
           onClick={() => setLightbox(null)}
         >
           <div
-            className="relative h-full max-h-[80vh] w-full max-w-5xl overflow-hidden border border-line clip-corner"
+            className="relative h-full max-h-[80vh] w-full max-w-5xl"
             onClick={(e) => e.stopPropagation()}
           >
-            <Image
-              src={`${active.src}?q=85&w=2000`}
-              alt={active.alt}
-              fill
-              sizes="90vw"
-              className="object-contain"
-            />
+            <Image src={active.src} alt={active.alt} fill sizes="90vw" className="object-contain" />
           </div>
 
-          <div className="pointer-events-none absolute inset-x-0 bottom-6 text-center">
+          <div className="pointer-events-none absolute inset-x-0 bottom-6 px-16 text-center">
             <p className="text-sm text-chalk">{active.alt}</p>
             <p className="mt-1 text-xs text-muted-2">
               {(lightbox ?? 0) + 1} / {items.length}

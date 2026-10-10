@@ -2,8 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
-import { gsap, useGSAP, ScrollTrigger, EASE_EXPO } from "@/lib/gsap";
+import { useEffect, useState } from "react";
 import { nav, site } from "@/lib/site";
 import Logo from "@/components/ui/Logo";
 
@@ -11,17 +10,14 @@ export default function Navbar() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const headerRef = useRef<HTMLElement>(null);
-  const menuRef = useRef<HTMLDivElement>(null);
 
-  /* Solid bar once the hero is behind us. */
-  useGSAP(() => {
-    const st = ScrollTrigger.create({
-      start: "top -80",
-      onUpdate: (self) => setScrolled(self.scroll() > 80),
-      onToggle: (self) => setScrolled(self.isActive),
-    });
-    return () => st.kill();
+  /* Solid bar once the hero is behind us. State only flips when the threshold
+     is crossed, so scrolling does not re-render the bar. */
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 80);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
   /* Close the overlay whenever the route changes — adjusted during render
@@ -34,7 +30,8 @@ export default function Navbar() {
 
   /* Lock the page behind the overlay, and allow Escape to dismiss it. */
   useEffect(() => {
-    document.body.style.overflow = open ? "hidden" : "";
+    if (!open) return;
+    document.body.style.overflow = "hidden";
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
     window.addEventListener("keydown", onKey);
     return () => {
@@ -43,40 +40,11 @@ export default function Navbar() {
     };
   }, [open]);
 
-  /* Overlay entrance: panel wipe, then links cascade. */
-  useGSAP(
-    () => {
-      if (!open || !menuRef.current) return;
-      const tl = gsap.timeline();
-      tl.fromTo(
-        menuRef.current,
-        { clipPath: "inset(0% 0% 100% 0%)" },
-        { clipPath: "inset(0% 0% 0% 0%)", duration: 0.7, ease: EASE_EXPO },
-      )
-        .fromTo(
-          menuRef.current.querySelectorAll("[data-menu-link]"),
-          { yPercent: 110, opacity: 0 },
-          { yPercent: 0, opacity: 1, duration: 0.8, stagger: 0.07, ease: EASE_EXPO },
-          "-=0.35",
-        )
-        .fromTo(
-          menuRef.current.querySelectorAll("[data-menu-meta]"),
-          { y: 24, opacity: 0 },
-          { y: 0, opacity: 1, duration: 0.6, stagger: 0.08 },
-          "-=0.5",
-        );
-    },
-    { dependencies: [open] },
-  );
-
   return (
     <>
       <header
-        ref={headerRef}
-        className={`fixed inset-x-0 top-0 z-50 transition-all duration-500 ${
-          scrolled
-            ? "border-b border-line bg-ink/85 py-3 backdrop-blur-xl"
-            : "border-b border-transparent py-5"
+        className={`fixed inset-x-0 top-0 z-50 border-b transition-[background-color,border-color,padding] duration-300 ${
+          scrolled || open ? "border-line bg-ink/95 py-2.5" : "border-transparent py-4"
         }`}
       >
         <div className="container-x flex items-center justify-between">
@@ -123,7 +91,7 @@ export default function Navbar() {
               onClick={() => setOpen((v) => !v)}
               aria-label={open ? "Close menu" : "Open menu"}
               aria-expanded={open}
-              className="relative z-60 grid h-11 w-11 place-items-center border border-line-2 lg:hidden clip-corner-sm"
+              className="grid h-11 w-11 place-items-center border border-line-2 lg:hidden clip-corner-sm"
             >
               <span className="relative block h-3.5 w-5">
                 <span
@@ -147,46 +115,41 @@ export default function Navbar() {
         </div>
       </header>
 
+      {/* Sits under the header (z-50) so the logo and close button stay reachable */}
       {open && (
-        <div
-          ref={menuRef}
-          className="fixed inset-0 z-55 flex flex-col justify-between bg-ink px-6 pb-10 pt-28 lg:hidden"
-        >
+        <div className="wipe-down fixed inset-0 z-40 flex flex-col justify-between overflow-y-auto bg-ink px-6 pb-10 pt-28 lg:hidden">
           <div
-            className="pointer-events-none absolute -right-24 top-10 h-72 w-72 rounded-full bg-brand/25 blur-[110px]"
+            className="glow pointer-events-none absolute -right-24 top-10 h-96 w-96"
             aria-hidden
           />
           <nav className="relative flex flex-col" aria-label="Mobile">
             {nav.map((item, i) => (
-              <div key={item.href} className="overflow-hidden">
-                <Link
-                  data-menu-link
-                  href={item.href}
-                  className={`display flex items-baseline gap-4 py-2.5 text-5xl transition-colors sm:text-6xl ${
-                    pathname === item.href ? "text-brand" : "text-chalk hover:text-brand"
-                  }`}
-                >
-                  <span className="font-sans text-[0.6rem] tracking-[0.2em] text-muted-2">
-                    0{i + 1}
-                  </span>
-                  {item.label}
-                </Link>
-              </div>
+              <Link
+                key={item.href}
+                href={item.href}
+                style={{ "--d": `${0.12 + i * 0.05}s` } as React.CSSProperties}
+                className={`rise display flex items-baseline gap-4 py-2.5 text-5xl transition-colors sm:text-6xl ${
+                  pathname === item.href ? "text-brand" : "text-chalk hover:text-brand"
+                }`}
+              >
+                <span className="font-sans text-[0.6rem] tracking-[0.2em] text-muted-2">
+                  0{i + 1}
+                </span>
+                {item.label}
+              </Link>
             ))}
           </nav>
 
-          <div className="relative space-y-4 border-t border-line pt-6">
-            <p data-menu-meta className="text-sm leading-relaxed text-muted">
-              {site.address}
-            </p>
-            <a
-              data-menu-meta
-              href={site.phoneHref}
-              className="display block text-3xl text-brand"
-            >
+          <div
+            className="rise relative mt-10 space-y-4 border-t border-line pt-6"
+            style={{ "--d": "0.45s" } as React.CSSProperties}
+          >
+            <p className="text-sm leading-relaxed text-muted">{site.address}</p>
+            <p className="eyebrow text-brand">Open 24 / 7</p>
+            <a href={site.phoneHref} className="display block text-3xl text-brand">
               {site.phone}
             </a>
-            <div data-menu-meta className="flex gap-4">
+            <div className="flex gap-4">
               <a
                 href={site.socials.instagram}
                 target="_blank"

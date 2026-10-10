@@ -1,24 +1,43 @@
+import type { StaticImageData } from "next/image";
+import venue from "@/assets/venue.jpg";
+import venueGames from "@/assets/venue-games.jpg";
+import venueShop from "@/assets/venue-shop.jpg";
+import venueEntrance from "@/assets/venue-entrance.jpg";
+import trainerLift from "@/assets/trainer-lift.jpg";
+import trainerDumbbells from "@/assets/trainer-dumbbells.jpg";
+import post01 from "@/assets/post-01.jpg";
+import post04 from "@/assets/post-04.jpg";
+import post05 from "@/assets/post-05.jpg";
+import post06 from "@/assets/post-06.jpg";
+import post07 from "@/assets/post-07.jpg";
+
 /**
  * Central content + brand data for the Club X website.
  *
- * Verified public details (address / phone / socials / core services) come from
- * Club X's own public listings. Anything marked PLACEHOLDER below is illustrative
- * copy that should be replaced with the club's real numbers before going live.
+ * Address, phone, socials, opening hours, the reviews and
+ * every photograph come from Club X's own Instagram (@clubx_isb) and its public
+ * Google listing. Anything marked PLACEHOLDER below is illustrative copy that
+ * should be replaced with the club's real numbers before going live.
  */
+
+const whatsappNumber = "923398940004";
 
 export const site = {
   name: "Club X",
-  tagline: "Gym · Snooker · Lounge",
+  /** The line under the club's own logo. */
+  tagline: "Gym | Snooker | Vape",
+  motto: "Fun N Fitness",
   city: "H-13, Islamabad",
   description:
-    "Club X is H-13's home for serious training. A fully equipped gym, certified personal trainers, a snooker floor and a lounge — all under one roof, opposite NUST Gate 2.",
-  address: "B1 & B2, U Tower, Opposite NUST Gate 2, H-13, Islamabad",
+    "Club X is H-13's 24/7 club — a fully equipped gym with personal training, a snooker floor, pool, foosball and PS4, plus an in-house shop. All under one roof, opposite NUST Gate 2.",
+  address: "B1 & B2, U Tower, Plot No. 02, Opposite NUST Gate 2, H-13, Islamabad",
   addressShort: "U Tower, Opposite NUST Gate 2, H-13",
   phone: "+92 339 894 0004",
   phoneHref: "tel:+923398940004",
-  whatsapp: "https://wa.me/923398940004",
+  whatsappNumber,
+  whatsapp: `https://wa.me/${whatsappNumber}`,
   email: "info@clubx.pk",
-  mapsQuery: "Club X Gym U Tower H-13 Islamabad",
+  mapsQuery: "Club X Gym & Snooker U Tower H-13 Islamabad",
   socials: {
     instagram: "https://www.instagram.com/clubx_isb/",
     facebook: "https://www.facebook.com/CLUBX.H13/",
@@ -34,19 +53,18 @@ export const nav = [
   { label: "Contact", href: "/contact" },
 ] as const;
 
-/** PLACEHOLDER — confirm real opening hours with the club. */
 export const hours = [
-  { day: "Monday – Friday", time: "6:00 AM – 12:00 AM" },
-  { day: "Saturday", time: "7:00 AM – 12:00 AM" },
-  { day: "Sunday", time: "8:00 AM – 11:00 PM" },
-  { day: "Ladies Hours (Daily)", time: "1:00 PM – 4:00 PM" },
+  { day: "Gym, snooker & games", time: "Open 24 / 7" },
+  { day: "Ladies timing (daily)", time: "11:00 AM – 3:00 PM" },
 ];
 
+export const ladiesHours = "11:00 AM – 3:00 PM";
+
 export const stats = [
-  { value: 12000, suffix: " sq/ft", label: "Two-floor training facility" },
-  { value: 60, suffix: "+", label: "Machines & free-weight stations" },
-  { value: 1500, suffix: "+", label: "Members trained since opening" },
-  { value: 18, suffix: " hrs", label: "Open, every single day" },
+  { value: "24/7", label: "Open every hour of every day" },
+  { value: "4.3★", label: "Google rating across 83 reviews" },
+  { value: "2", label: "Floors — B1 & B2 of U Tower" },
+  { value: "7.5K+", label: "Following @clubx_isb on Instagram" },
 ];
 
 export type Facility = {
@@ -55,68 +73,93 @@ export type Facility = {
   kicker: string;
   blurb: string;
   points: string[];
-  image: string;
+  image: StaticImageData;
+  imageAlt: string;
+  /** Focal point for crops, as a Tailwind object-position class. */
+  imageClass?: string;
 };
 
 export const facilities: Facility[] = [
   {
-    slug: "strength",
-    title: "Strength Floor",
+    slug: "gym",
+    title: "Gym Floor",
     kicker: "01",
     blurb:
-      "Power racks, Olympic platforms, a full dumbbell run up to heavy, and plate-loaded machines for every pattern you train.",
+      "Racks, barbells, dumbbells, machines and a cardio line on a clean, well-ventilated floor — open around the clock, so you train when it suits you.",
     points: [
-      "4 power & squat racks",
-      "Dumbbells 2.5–50 kg",
-      "Deadlift platforms",
-      "Plate-loaded machines",
+      "Free weights & racks",
+      "Machines & cardio line",
+      "Clean, ventilated floor",
+      "Open 24 / 7",
     ],
-    image: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48",
-  },
-  {
-    slug: "cardio",
-    title: "Cardio Zone",
-    kicker: "02",
-    blurb:
-      "Treadmills, ellipticals, bikes and rowers lined along the glass — conditioning work without the queue.",
-    points: ["Treadmills & ellipticals", "Assault + spin bikes", "Rowing ergs", "Stair climber"],
-    image: "https://images.unsplash.com/photo-1591258370814-01609b341790",
+    image: trainerLift,
+    imageAlt: "Deadlift on the Club X gym floor",
   },
   {
     slug: "personal-training",
     title: "Personal Training",
-    kicker: "03",
+    kicker: "02",
     blurb:
-      "One-to-one coaching with certified trainers. Programming, technique correction and nutrition guidance built around you.",
-    points: ["Certified coaches", "Custom programming", "Form & technique work", "Diet planning support"],
-    image: "https://images.unsplash.com/photo-1552674605-db6ffd4facb5",
-  },
-  {
-    slug: "functional",
-    title: "Functional & HIIT",
-    kicker: "04",
-    blurb:
-      "Turf lane, kettlebells, battle ropes and sleds for circuits that build engine as much as muscle.",
-    points: ["Turf sled lane", "Kettlebells & ropes", "Boxes, bands & balls", "Group HIIT circuits"],
-    image: "https://images.unsplash.com/photo-1570829460005-c840387bb1ca",
+      "One-to-one sessions with Club X's trainer, Abdul Hadi — a programme built around your goal, with someone watching your form on every set.",
+    points: [
+      "Trainer: Abdul Hadi",
+      "Strength training",
+      "Form & technique work",
+      "Programme built around you",
+    ],
+    image: trainerDumbbells,
+    imageAlt: "Dumbbell training at Club X",
   },
   {
     slug: "snooker",
     title: "Snooker Floor",
-    kicker: "05",
+    kicker: "03",
     blurb:
-      "Full-size tables under low lights. The other half of Club X — where the session ends and the frames begin.",
-    points: ["Full-size tables", "Tournament-grade cloth", "Hourly & member rates", "Late-night frames"],
-    image: "https://images.unsplash.com/photo-1546483875-ad9014c88eba",
+      "The other half of Club X. Well-lit tables kept in great shape and a setup regulars call professional — and the doors never close.",
+    points: [
+      "Well-lit snooker tables",
+      "Tables kept in great shape",
+      "Walk in, no membership needed",
+      "Open 24 / 7",
+    ],
+    image: post01,
+    imageAlt: "Club X Snooker — now open",
+    imageClass: "object-[50%_72%]",
   },
   {
-    slug: "lounge",
-    title: "Lounge & Shop",
+    slug: "games",
+    title: "Pool, Foosball & PS4",
+    kicker: "04",
+    blurb:
+      "Not every visit has to be a workout. Shoot a rack of pool, settle it over foosball or pick up a PS4 controller in the lounge.",
+    points: ["Pool table", "Foosball table", "PS4 gaming", "Lounge seating"],
+    image: venueGames,
+    imageAlt: "Pool table and foosball table in the Club X lounge",
+  },
+  {
+    slug: "shop",
+    title: "Shop & Vape Counter",
+    kicker: "05",
+    blurb:
+      "An in-house mini shop for the things you need before or after a session, alongside the Club X vape counter.",
+    points: [
+      "In-house mini shop",
+      "Gym essentials",
+      "Vape counter (18+ only)",
+      "Right inside the club",
+    ],
+    image: venueShop,
+    imageAlt: "The shop counter inside Club X",
+  },
+  {
+    slug: "ladies",
+    title: "Ladies Timing",
     kicker: "06",
     blurb:
-      "A chill-out lounge plus an in-house shop for shakers, supplements and the essentials you forgot at home.",
-    points: ["Members' lounge", "Supplement counter", "Shakes & essentials", "Free Wi-Fi"],
-    image: "https://images.unsplash.com/photo-1517963879433-6ad2b056d712",
+      "A dedicated ladies slot on the gym floor every single day, from 11 in the morning to 3 in the afternoon.",
+    points: ["Every day of the week", "11:00 AM – 3:00 PM", "Full gym floor", "Message us to get started"],
+    image: venueEntrance,
+    imageAlt: "The Club X entrance at U Tower",
   },
 ];
 
@@ -129,9 +172,9 @@ export const plans = [
     tagline: "No commitment. Train month to month.",
     features: [
       "Full gym floor access",
-      "Cardio + strength zones",
-      "Locker & changing rooms",
-      "Free induction session",
+      "24 / 7 entry",
+      "Ladies timing 11 AM – 3 PM",
+      "Help getting started on the floor",
     ],
     featured: false,
   },
@@ -142,10 +185,9 @@ export const plans = [
     tagline: "Our most popular plan — best value per month.",
     features: [
       "Everything in Monthly",
-      "2 personal-training sessions",
-      "Body composition check-ins",
-      "10% off the supplement shop",
-      "Discounted snooker rates",
+      "Three months at a lower rate",
+      "Personal training available",
+      "Snooker, pool & PS4 on site",
     ],
     featured: true,
   },
@@ -156,122 +198,103 @@ export const plans = [
     tagline: "Full access, all year, at the lowest rate.",
     features: [
       "Everything in Quarterly",
-      "6 personal-training sessions",
-      "Guest passes each month",
-      "Priority class booking",
-      "Free Club X kit bag",
+      "Lowest rate per month",
+      "A full year, any hour",
+      "Ask about personal training offers",
     ],
     featured: false,
   },
 ];
 
 export const addOns = [
-  { name: "Personal Training", detail: "1-to-1 coaching, per session or in packs of 8 and 12." },
-  { name: "Snooker Table", detail: "Hourly rates, with member pricing on every frame." },
-  { name: "Couple / Buddy", detail: "Two memberships bought together, at a reduced combined rate." },
-  { name: "Student Rate", detail: "NUST and H-13 students — bring your ID to the front desk." },
+  { name: "Personal Training", detail: "1-to-1 sessions with Club X's trainer, Abdul Hadi." },
+  { name: "Snooker", detail: "Pay-as-you-play tables, open to everyone, 24 / 7." },
+  { name: "Pool, Foosball & PS4", detail: "The games lounge — bring friends, no membership needed." },
+  { name: "Ladies Timing", detail: "A dedicated ladies slot every day, 11 AM – 3 PM." },
 ];
 
-export const trainers = [
-  {
-    name: "Rizwan Shah",
-    role: "Founder & Head Coach",
-    focus: "Strength · Powerlifting",
-    image: "https://images.unsplash.com/photo-1518611012118-696072aa579a",
-  },
-  {
-    name: "Hamza Iqbal",
-    role: "Senior Personal Trainer",
-    focus: "Hypertrophy · Body Recomposition",
-    image: "https://images.unsplash.com/photo-1517836357463-d25dfeac3438",
-  },
-  {
-    name: "Bilal Ahmed",
-    role: "Conditioning Coach",
-    focus: "HIIT · Athletic Performance",
-    image: "https://images.unsplash.com/photo-1583454110551-21f2fa2afe61",
-  },
-  {
-    name: "Ayesha Khan",
-    role: "Ladies Floor Trainer",
-    focus: "Strength Foundations · Mobility",
-    image: "https://images.unsplash.com/photo-1593079831268-3381b0db4a77",
-  },
-];
+export const trainer = {
+  name: "Abdul Hadi",
+  role: "Club X Personal Trainer",
+  /** What a personal-training block covers. Add his own bio and photo when available. */
+  sessions: [
+    "One-to-one sessions on the gym floor",
+    "A programme built around your goal",
+    "Form and technique work",
+    "Strength training",
+  ],
+};
 
-/** PLACEHOLDER — swap for real member reviews, with permission. */
+/** Real reviews from Club X's Google listing. */
 export const testimonials = [
   {
     quote:
-      "Cleanest gym I have trained in around H-13. The equipment is new, the floor never feels overcrowded, and the trainers actually correct your form.",
-    name: "Usman T.",
-    meta: "Member since 2023",
+      "Club X Gym and Snooker is my go-to spot for both fitness and leisure! The gym equipment is modern, well-maintained, and offers a great variety to suit all fitness levels. The staff are friendly, knowledgeable, and always eager to assist.",
+    name: "Talha M",
+    meta: "Google review · Sep 2025",
   },
   {
     quote:
-      "Being right opposite NUST Gate 2 makes it effortless — I finish class, walk over, train, and shoot a frame of snooker after.",
-    name: "Zain A.",
-    meta: "NUST student",
+      "One of the best snooker spots around — clean, well-lit, and the tables are in great shape and the overall setup feels professional. There's a gym as well if you're into that.",
+    name: "Asad U",
+    meta: "Google review · May 2025",
   },
   {
     quote:
-      "I started at zero. Three months of personal training here and I am squatting my bodyweight. The coaching made all the difference.",
-    name: "Maryam S.",
-    meta: "Member since 2024",
+      "The gym is well-maintained, with a clean and tidy environment that makes workouts enjoyable. Plus, you can also enjoy a game of snooker or play on the PS4, which is a cherry on top for relaxation after a great workout session!",
+    name: "Rayyan A",
+    meta: "Google review · Mar 2025",
   },
   {
     quote:
-      "Open late, well ventilated, and the staff know every member by name. It feels like a club, not a warehouse of machines.",
-    name: "Fahad R.",
-    meta: "Member since 2022",
+      "Gym X is the best in the vicinity, offering a clean environment, supportive staff, and high-quality equipment. Truly enjoying my time here!",
+    name: "My_lensworld I",
+    meta: "Google review · Mar 2025",
   },
 ];
 
 export type GalleryItem = {
-  src: string;
+  src: StaticImageData;
   alt: string;
-  tag: string;
-  span: "wide" | "tall" | "normal";
+  tag: "Venue" | "Training" | "Snooker";
 };
 
+/** Club X's own photos and posts — the venue shot plus the official feed. */
 export const gallery: GalleryItem[] = [
-  { src: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48", alt: "Free-weight and dumbbell area", tag: "Strength", span: "wide" },
-  { src: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b", alt: "Member training on the gym floor", tag: "Training", span: "tall" },
-  { src: "https://images.unsplash.com/photo-1546483875-ad9014c88eba", alt: "Snooker table under low lighting", tag: "Snooker", span: "normal" },
-  { src: "https://images.unsplash.com/photo-1591258370814-01609b341790", alt: "Row of treadmills in the cardio zone", tag: "Cardio", span: "normal" },
-  { src: "https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e", alt: "Barbell training session", tag: "Strength", span: "normal" },
-  { src: "https://images.unsplash.com/photo-1526506118085-60ce8714f8c5", alt: "Boxing and conditioning work", tag: "Conditioning", span: "tall" },
-  { src: "https://images.unsplash.com/photo-1540497077202-7c8a3999166f", alt: "Wide view of the training floor", tag: "The Floor", span: "wide" },
-  { src: "https://images.unsplash.com/photo-1584735935682-2f2b69dff9d2", alt: "Kettlebell and functional equipment", tag: "Functional", span: "normal" },
-  { src: "https://images.unsplash.com/photo-1567013127542-490d757e51fc", alt: "Loaded weight plates", tag: "Strength", span: "normal" },
-  { src: "https://images.unsplash.com/photo-1594737625785-a6cbdabd333c", alt: "Machines lined along the gym floor", tag: "Machines", span: "normal" },
-  { src: "https://images.unsplash.com/photo-1571902943202-507ec2618e8f", alt: "Mobility and stretching area", tag: "Mobility", span: "normal" },
-  { src: "https://images.unsplash.com/photo-1605296867304-46d5465a13f1", alt: "Low-lit corner of the training floor", tag: "Atmosphere", span: "wide" },
+  { src: venue, alt: "The Club X lounge — pool, foosball, the entrance and the shop", tag: "Venue" },
+  { src: post01, alt: "Club X Snooker is back — now open", tag: "Snooker" },
+  { src: venueGames, alt: "Pool table and foosball table in the lounge", tag: "Venue" },
+  { src: post04, alt: "The only bad workout is the one that didn't happen", tag: "Training" },
+  { src: venueEntrance, alt: "The Club X entrance at U Tower", tag: "Venue" },
+  { src: post05, alt: "Pain is temporary. Pride is forever.", tag: "Training" },
+  { src: venueShop, alt: "The shop counter inside Club X", tag: "Venue" },
+  { src: post06, alt: "Common gym mistakes to avoid", tag: "Training" },
+  { src: post07, alt: "20–30 minute quick workout plans", tag: "Training" },
 ];
 
 export const faqs = [
   {
     q: "Where exactly is Club X?",
-    a: "We are at B1 & B2, U Tower, directly opposite NUST Gate 2 in H-13, Islamabad. There is parking at the tower and we are a short walk from the NUST campus.",
+    a: "We are at B1 & B2, U Tower, Plot No. 02, directly opposite NUST Gate 2 in H-13, Islamabad — a short walk from the NUST campus.",
   },
   {
-    q: "Do I need to book before my first visit?",
-    a: "No booking needed. Walk in any time we are open and the front desk will give you a tour and a free induction on the floor.",
+    q: "What are your timings?",
+    a: "Club X is open 24 hours a day, 7 days a week. Come in whenever it suits you — early morning, after class or in the middle of the night.",
   },
   {
     q: "Is there a separate ladies timing?",
-    a: "Yes — we run dedicated ladies hours daily with a female trainer on the floor. Call ahead to confirm the current slot.",
+    a: "Yes. Ladies timing runs every day from 11:00 AM to 3:00 PM.",
   },
   {
-    q: "Can I use the snooker floor without a gym membership?",
-    a: "Absolutely. The snooker floor runs on hourly rates and is open to everyone; gym members simply pay a discounted rate.",
+    q: "Can I play snooker without a gym membership?",
+    a: "Absolutely. The snooker floor, pool, foosball and PS4 are open to everyone — you do not need a gym membership to play.",
   },
   {
     q: "Do you offer personal training?",
-    a: "We do. Certified trainers take one-to-one clients with custom programming, technique work and nutrition guidance — available per session or in packs.",
+    a: "We do. Club X's trainer, Abdul Hadi, takes one-to-one clients — message us on WhatsApp to book a session.",
   },
   {
-    q: "What is included with a membership?",
-    a: "Full access to the strength floor, cardio zone and functional area, lockers and changing rooms, plus a free induction session to set up your programme.",
+    q: "How do I join or ask about rates?",
+    a: "Message us on WhatsApp, call the desk or just walk in — we will take you through the current packages and get you started.",
   },
 ];

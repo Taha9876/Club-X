@@ -8,14 +8,13 @@ export default function Footer() {
 
   return (
     <footer className="relative overflow-hidden border-t border-line bg-ink-2">
-      <div className="grain pointer-events-none absolute inset-0" aria-hidden />
       <div
-        className="pointer-events-none absolute -bottom-40 left-1/2 h-[420px] w-[820px] -translate-x-1/2 rounded-full bg-brand/12 blur-[140px]"
+        className="glow pointer-events-none absolute -bottom-60 left-1/2 h-[520px] w-[920px] -translate-x-1/2 opacity-60"
         aria-hidden
       />
 
       <Marquee
-        items={["Train Hard", "H-13 Islamabad", "Gym & Snooker", "No Excuses"]}
+        items={["Open 24/7", "H-13 Islamabad", "Gym & Snooker", "Fun N Fitness"]}
         variant="outline"
         speed="slow"
         className="border-b border-line py-7"
@@ -23,11 +22,9 @@ export default function Footer() {
 
       <div className="container-x relative grid gap-12 py-16 md:grid-cols-2 lg:grid-cols-4 lg:py-20">
         <div className="lg:col-span-1">
-          <Logo />
-          <p className="mt-5 max-w-xs text-sm leading-relaxed text-muted">
-            {site.description}
-          </p>
-          <div className="mt-6 flex gap-3">
+          <Logo size="lg" tagline />
+          <p className="mt-6 max-w-xs text-sm leading-relaxed text-muted">{site.description}</p>
+          <div className="mt-6 flex flex-wrap gap-3">
             {[
               { label: "Instagram", href: site.socials.instagram },
               { label: "Facebook", href: site.socials.facebook },
@@ -99,7 +96,7 @@ export default function Footer() {
         <p>
           © {year} {site.name}, {site.city}. All rights reserved.
         </p>
-        <p>Gym · Snooker · Lounge — opposite NUST Gate 2.</p>
+        <p>Gym · Snooker · Games — open 24/7, opposite NUST Gate 2.</p>
       </div>
     </footer>
   );

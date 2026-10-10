@@ -5,7 +5,7 @@ export default function NotFound() {
     <section className="relative flex min-h-screen items-center justify-center overflow-hidden bg-ink px-6 text-center">
       <div className="grid-bg grid-bg-fade pointer-events-none absolute inset-0 opacity-60" aria-hidden />
       <div
-        className="pointer-events-none absolute left-1/2 top-1/2 h-[420px] w-[420px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-brand/15 blur-[120px]"
+        className="glow pointer-events-none absolute left-1/2 top-1/2 h-[520px] w-[520px] -translate-x-1/2 -translate-y-1/2"
         aria-hidden
       />
 
