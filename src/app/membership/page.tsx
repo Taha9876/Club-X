@@ -11,21 +11,21 @@ import { faqs } from "@/lib/site";
 export const metadata: Metadata = {
   title: "Membership",
   description:
-    "Monthly, quarterly and annual memberships at Club X, H-13 Islamabad — plus personal training packs, student rates and snooker access.",
+    "Gym memberships at Club X, H-13 Islamabad — 24/7 access, ladies timing 11 AM – 3 PM, personal training, plus snooker and games on site.",
 };
 
 const INCLUDED = [
-  { t: "Free induction", d: "A trainer walks you through the floor and sets your first programme." },
-  { t: "No joining fee", d: "The price on the card is the price you pay. Nothing bolted on at the desk." },
-  { t: "Lockers & changing", d: "Secure lockers and changing rooms on both floors." },
-  { t: "Pause, don't lose", d: "Travelling or injured? Talk to the desk about holding your plan." },
+  { t: "24 / 7 access", d: "Train at any hour — the gym floor never closes." },
+  { t: "Ladies timing", d: "A dedicated ladies slot every day from 11 AM to 3 PM." },
+  { t: "Personal training", d: "One-to-one sessions available with Club X's trainer, Abdul Hadi." },
+  { t: "More than a gym", d: "Snooker, pool, foosball, PS4 and a shop under the same roof." },
 ];
 
 const STEPS = [
-  { n: "01", t: "Walk in", d: "Drop by U Tower any time we are open. No appointment required." },
-  { n: "02", t: "Tour the floor", d: "See the equipment, meet a trainer, ask the awkward questions." },
-  { n: "03", t: "Pick a plan", d: "Monthly, quarterly or annual — plus any add-ons you want." },
-  { n: "04", t: "First session", d: "Free induction, then straight into your programme." },
+  { n: "01", t: "Walk in", d: "Drop by U Tower at any hour. No appointment required." },
+  { n: "02", t: "Tour the floor", d: "See the equipment, meet the trainer, ask the awkward questions." },
+  { n: "03", t: "Pick a plan", d: "Monthly, quarterly or annual — plus personal training if you want it." },
+  { n: "04", t: "Start training", d: "Get set up on the floor and into your first session." },
 ];
 
 export default function MembershipPage() {
@@ -34,12 +34,11 @@ export default function MembershipPage() {
       <PageHero
         eyebrow="Membership"
         title="One card. The whole club."
-        description="Every Club X plan opens the full training floor — strength, cardio and functional — with discounted snooker and personal-training rates on top."
-        image="https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e"
+        description="Every Club X plan opens the full gym floor around the clock — with personal training, snooker and the games lounge all under the same roof."
         meta={[
           { k: "Plans", v: "Monthly · Quarterly · Annual" },
-          { k: "Joining fee", v: "None" },
-          { k: "Induction", v: "Free with every plan" },
+          { k: "Access", v: "24 / 7" },
+          { k: "Ladies timing", v: "11 AM – 3 PM" },
         ]}
       />
 
@@ -51,12 +50,12 @@ export default function MembershipPage() {
           <div className="lg:col-span-5">
             <SectionHeading
               eyebrow="Included"
-              title="What every plan gets you"
-              description="The basics should never be an upsell. These come with the cheapest card we sell."
+              title="What you walk into"
+              description="The things that make Club X worth the card — whichever plan you pick."
             />
           </div>
 
-          <Reveal className="grid gap-px border border-line bg-line sm:grid-cols-2 lg:col-span-7" stagger={0.1}>
+          <Reveal className="grid gap-px border border-line bg-line sm:grid-cols-2 lg:col-span-7" stagger>
             {INCLUDED.map((item) => (
               <div
                 key={item.t}
@@ -77,7 +76,7 @@ export default function MembershipPage() {
         <div className="container-x relative">
           <SectionHeading eyebrow="Joining" title="Four steps, ten minutes" align="center" />
 
-          <Reveal className="mt-16 grid gap-5 sm:grid-cols-2 lg:grid-cols-4" stagger={0.12}>
+          <Reveal className="mt-16 grid gap-5 sm:grid-cols-2 lg:grid-cols-4" stagger>
             {STEPS.map((s) => (
               <div
                 key={s.n}
@@ -101,11 +100,11 @@ export default function MembershipPage() {
             <SectionHeading
               eyebrow="FAQ"
               title="Before you ask"
-              description="Still unsure about something? The front desk answers the phone all day."
+              description="Still unsure about something? Message us on WhatsApp — we are open around the clock."
             />
           </div>
           <div className="lg:col-span-8">
-            <Reveal y={30}>
+            <Reveal>
               <Accordion items={faqs} />
             </Reveal>
           </div>

@@ -1,8 +1,5 @@
-"use client";
-
 import Link from "next/link";
-import { useRef, type ReactNode } from "react";
-import { gsap, prefersReducedMotion } from "@/lib/gsap";
+import type { ReactNode } from "react";
 
 type Variant = "solid" | "outline" | "ghost";
 
@@ -12,8 +9,6 @@ type ButtonProps = {
   variant?: Variant;
   className?: string;
   external?: boolean;
-  /** Magnetic hover pull, disabled on touch where it just feels sticky. */
-  magnetic?: boolean;
 };
 
 const base =
@@ -31,28 +26,7 @@ export default function Button({
   variant = "solid",
   className = "",
   external = false,
-  magnetic = true,
 }: ButtonProps) {
-  const ref = useRef<HTMLAnchorElement>(null);
-
-  const onMove = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    const el = ref.current;
-    if (!el || !magnetic || prefersReducedMotion()) return;
-    if (window.matchMedia("(hover: none)").matches) return;
-    const r = el.getBoundingClientRect();
-    gsap.to(el, {
-      x: (e.clientX - (r.left + r.width / 2)) * 0.28,
-      y: (e.clientY - (r.top + r.height / 2)) * 0.4,
-      duration: 0.5,
-      ease: "power3.out",
-    });
-  };
-
-  const onLeave = () => {
-    if (!ref.current) return;
-    gsap.to(ref.current, { x: 0, y: 0, duration: 0.7, ease: "elastic.out(1, 0.4)" });
-  };
-
   const content = (
     <>
       {/* Sweep fill that wipes in from the bottom on hover */}
@@ -76,7 +50,7 @@ export default function Button({
      tab both misbehave on mobile. */
   if (/^(tel:|mailto:)/.test(href)) {
     return (
-      <a ref={ref} href={href} className={cls} onMouseMove={onMove} onMouseLeave={onLeave}>
+      <a href={href} className={cls}>
         {content}
       </a>
     );
@@ -84,22 +58,14 @@ export default function Button({
 
   if (external) {
     return (
-      <a
-        ref={ref}
-        href={href}
-        target="_blank"
-        rel="noopener noreferrer"
-        className={cls}
-        onMouseMove={onMove}
-        onMouseLeave={onLeave}
-      >
+      <a href={href} target="_blank" rel="noopener noreferrer" className={cls}>
         {content}
       </a>
     );
   }
 
   return (
-    <Link ref={ref} href={href} className={cls} onMouseMove={onMove} onMouseLeave={onLeave}>
+    <Link href={href} className={cls}>
       {content}
     </Link>
   );

@@ -1,32 +1,12 @@
 "use client";
 
-import { useRef, useState } from "react";
-import { gsap, prefersReducedMotion } from "@/lib/gsap";
+import { useState } from "react";
 
 type Item = { q: string; a: string };
 
-/** FAQ list where one panel is open at a time, animated on real height. */
+/** FAQ list where one panel is open at a time; the height animates in CSS. */
 export default function Accordion({ items }: { items: Item[] }) {
   const [open, setOpen] = useState<number | null>(0);
-  const panels = useRef<(HTMLDivElement | null)[]>([]);
-
-  const toggle = (i: number) => {
-    const next = open === i ? null : i;
-    setOpen(next);
-
-    if (prefersReducedMotion()) return;
-
-    panels.current.forEach((panel, index) => {
-      if (!panel) return;
-      const shouldOpen = index === next;
-      gsap.to(panel, {
-        height: shouldOpen ? "auto" : 0,
-        opacity: shouldOpen ? 1 : 0,
-        duration: 0.5,
-        ease: "power3.inOut",
-      });
-    });
-  };
 
   return (
     <div className="border-t border-line">
@@ -36,7 +16,7 @@ export default function Accordion({ items }: { items: Item[] }) {
           <div key={item.q} className="border-b border-line">
             <button
               type="button"
-              onClick={() => toggle(i)}
+              onClick={() => setOpen(isOpen ? null : i)}
               aria-expanded={isOpen}
               className="group flex w-full items-center justify-between gap-6 py-6 text-left"
             >
@@ -57,14 +37,10 @@ export default function Accordion({ items }: { items: Item[] }) {
               </span>
             </button>
 
-            <div
-              ref={(el) => {
-                panels.current[i] = el;
-              }}
-              className="overflow-hidden"
-              style={{ height: isOpen ? "auto" : 0, opacity: isOpen ? 1 : 0 }}
-            >
-              <p className="max-w-2xl pb-7 text-sm leading-relaxed text-muted">{item.a}</p>
+            <div className="accordion-panel" data-open={isOpen}>
+              <div>
+                <p className="max-w-2xl pb-7 text-sm leading-relaxed text-muted">{item.a}</p>
+              </div>
             </div>
           </div>
         );

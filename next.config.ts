@@ -2,13 +2,8 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   images: {
-    remotePatterns: [
-      {
-        protocol: "https",
-        hostname: "images.unsplash.com",
-        pathname: "/**",
-      },
-    ],
+    // Every photo is a local import now, so no remote hosts are allowed.
+    formats: ["image/avif", "image/webp"],
   },
 };
 

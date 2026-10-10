@@ -32,7 +32,6 @@ export default function SectionHeading({
       <SplitHeading
         text={title}
         className={`display mt-5 text-[2.5rem] leading-[0.9] sm:text-6xl lg:text-[4.25rem] ${titleClassName}`}
-        mode="words"
       />
 
       {description && (

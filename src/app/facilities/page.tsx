@@ -4,6 +4,7 @@ import PageHero from "@/components/layout/PageHero";
 import SectionHeading from "@/components/ui/SectionHeading";
 import SplitHeading from "@/components/ui/SplitHeading";
 import Reveal from "@/components/ui/Reveal";
+import Trainers from "@/components/shared/Trainers";
 import LocationBlock from "@/components/shared/LocationBlock";
 import CTA from "@/components/shared/CTA";
 import { facilities } from "@/lib/site";
@@ -11,17 +12,15 @@ import { facilities } from "@/lib/site";
 export const metadata: Metadata = {
   title: "Facilities",
   description:
-    "Strength floor, cardio zone, functional lane, personal training, a full snooker hall and a members' lounge — everything inside Club X, H-13 Islamabad.",
+    "Gym floor, personal training, snooker, pool, foosball, PS4 and an in-house shop — everything inside Club X, H-13 Islamabad. Open 24/7, ladies timing 11 AM – 3 PM.",
 };
 
-/** PLACEHOLDER schedule — align with the club's real class timetable. */
-const SCHEDULE = [
-  { time: "06:30", session: "Early Strength", coach: "Rizwan", days: "Mon · Wed · Fri" },
-  { time: "08:00", session: "Conditioning Circuit", coach: "Bilal", days: "Tue · Thu" },
-  { time: "13:00", session: "Ladies Floor", coach: "Ayesha", days: "Daily" },
-  { time: "18:00", session: "Hypertrophy Block", coach: "Hamza", days: "Mon – Sat" },
-  { time: "20:00", session: "HIIT Finisher", coach: "Bilal", days: "Mon · Wed · Fri" },
-  { time: "22:00", session: "Open Floor + Snooker", coach: "—", days: "Daily" },
+const DAY = [
+  { time: "24 / 7", session: "Gym floor", note: "Open training, every hour of every day" },
+  { time: "24 / 7", session: "Snooker floor", note: "Walk in and rack up — no membership needed" },
+  { time: "24 / 7", session: "Pool, foosball & PS4", note: "The games lounge, open with the club" },
+  { time: "11 AM – 3 PM", session: "Ladies timing", note: "Dedicated ladies slot on the gym floor, daily" },
+  { time: "By booking", session: "Personal training", note: "One-to-one sessions with Abdul Hadi" },
 ];
 
 export default function FacilitiesPage() {
@@ -30,12 +29,11 @@ export default function FacilitiesPage() {
       <PageHero
         eyebrow="Facilities"
         title="Everything under one roof"
-        description="Two floors, six zones. Whether you are chasing a first pull-up or a new deadlift PR, the equipment and the coaching are already here."
-        image="https://images.unsplash.com/photo-1534438327276-14e5300c3a48"
+        description="Two floors at U Tower: a full gym, personal training, a snooker floor, a games lounge and an in-house shop — open around the clock."
         meta={[
-          { k: "Zones", v: "6" },
-          { k: "Stations", v: "60+" },
-          { k: "Snooker", v: "Full-size tables" },
+          { k: "Open", v: "24 / 7" },
+          { k: "Ladies timing", v: "11 AM – 3 PM" },
+          { k: "Also here", v: "Snooker · Pool · PS4" },
         ]}
       />
 
@@ -52,20 +50,18 @@ export default function FacilitiesPage() {
                 id={f.slug}
                 className="grid scroll-mt-32 items-center gap-10 lg:grid-cols-12 lg:gap-16"
               >
-                <Reveal
-                  className={`relative lg:col-span-6 ${flipped ? "lg:order-2" : ""}`}
-                  y={50}
-                >
+                <Reveal className={`relative lg:col-span-6 ${flipped ? "lg:order-2" : ""}`}>
                   <div className="group relative aspect-4/3 overflow-hidden border border-line clip-corner">
                     <Image
-                      src={`${f.image}?q=80&w=1600`}
-                      alt={f.title}
+                      src={f.image}
+                      alt={f.imageAlt}
                       fill
+                      placeholder="blur"
                       sizes="(max-width: 1024px) 100vw, 48vw"
-                      className="object-cover opacity-65 transition-all duration-700 [filter:grayscale(1)] group-hover:scale-105 group-hover:opacity-90 group-hover:[filter:grayscale(0.1)]"
+                      className={`object-cover transition-[scale] duration-700 group-hover:scale-105 ${f.imageClass ?? ""}`}
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-ink via-transparent to-transparent" />
-                    <span className="display absolute left-5 top-3 text-7xl text-outline-red opacity-70">
+                    <div className="absolute inset-0 bg-gradient-to-t from-ink/80 via-transparent to-transparent" />
+                    <span className="display absolute bottom-3 left-5 text-7xl text-outline-red opacity-80">
                       {f.kicker}
                     </span>
                   </div>
@@ -79,7 +75,6 @@ export default function FacilitiesPage() {
 
                   <SplitHeading
                     text={f.title}
-                    mode="words"
                     className="display mt-5 text-4xl leading-[0.92] sm:text-5xl lg:text-6xl"
                   />
 
@@ -92,7 +87,7 @@ export default function FacilitiesPage() {
                   <Reveal
                     delay={0.15}
                     className="mt-8 grid gap-px border border-line bg-line sm:grid-cols-2"
-                    stagger={0.07}
+                    stagger
                   >
                     {f.points.map((p) => (
                       <div
@@ -111,20 +106,22 @@ export default function FacilitiesPage() {
         </div>
       </section>
 
-      {/* ---------- Schedule ---------- */}
-      <section className="relative overflow-hidden border-y border-line bg-ink-2 py-24 lg:py-32">
+      <Trainers />
+
+      {/* ---------- Timings ---------- */}
+      <section className="relative overflow-hidden border-y border-line bg-ink py-24 lg:py-32">
         <div className="container-x relative">
           <SectionHeading
-            eyebrow="Timetable"
-            title="A day on the floor"
-            description="Coached sessions run alongside open-floor training all day. Walk in for any slot — no booking needed unless you want one-to-one time."
+            eyebrow="Timings"
+            title="When it is all open"
+            description="Short answer: always. Club X runs 24 hours a day, 7 days a week — with a dedicated ladies slot every day."
           />
 
-          <Reveal className="mt-12 overflow-x-auto" y={30}>
+          <Reveal className="mt-12 overflow-x-auto">
             <table className="w-full min-w-[36rem] border-collapse text-left">
               <thead>
                 <tr className="border-b border-line-2">
-                  {["Time", "Session", "Coach", "Days"].map((h) => (
+                  {["When", "What", "Good to know"].map((h) => (
                     <th
                       key={h}
                       className="py-4 pr-6 text-[0.6rem] font-semibold uppercase tracking-[0.22em] text-muted-2"
@@ -135,26 +132,23 @@ export default function FacilitiesPage() {
                 </tr>
               </thead>
               <tbody>
-                {SCHEDULE.map((row) => (
+                {DAY.map((row) => (
                   <tr
-                    key={row.time + row.session}
-                    className="group border-b border-line transition-colors hover:bg-surface"
+                    key={row.session}
+                    className="border-b border-line transition-colors hover:bg-surface"
                   >
-                    <td className="py-5 pr-6 font-mono text-sm text-brand">{row.time}</td>
+                    <td className="whitespace-nowrap py-5 pr-6 font-mono text-sm text-brand">
+                      {row.time}
+                    </td>
                     <td className="py-5 pr-6 text-sm font-medium text-chalk lg:text-base">
                       {row.session}
                     </td>
-                    <td className="py-5 pr-6 text-sm text-muted">{row.coach}</td>
-                    <td className="py-5 pr-6 text-sm text-muted-2">{row.days}</td>
+                    <td className="py-5 pr-6 text-sm text-muted">{row.note}</td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </Reveal>
-
-          <p className="mt-6 text-xs text-muted-2">
-            Sample timetable for layout — replace with the live Club X schedule before launch.
-          </p>
         </div>
       </section>
 

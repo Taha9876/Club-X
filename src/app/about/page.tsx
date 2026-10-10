@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Image from "next/image";
+import venueGames from "@/assets/venue-games.jpg";
 import PageHero from "@/components/layout/PageHero";
 import SectionHeading from "@/components/ui/SectionHeading";
 import Reveal from "@/components/ui/Reveal";
@@ -12,47 +13,47 @@ import { site } from "@/lib/site";
 export const metadata: Metadata = {
   title: "About",
   description:
-    "Club X is a two-floor gym, snooker hall and lounge in U Tower, H-13 Islamabad — opposite NUST Gate 2. Here is how it started and what we stand for.",
+    "Club X is a 24/7 gym, snooker floor and games lounge in U Tower, H-13 Islamabad — opposite NUST Gate 2. Here is what we stand for.",
 };
 
 const VALUES = [
   {
     n: "01",
     t: "Show up, not show off",
-    d: "No mirrors-only culture. The floor is for working, and everyone from first-timers to competitive lifters gets the same room.",
+    d: "The floor is for working, and everyone from first-timers to competitive lifters gets the same room.",
   },
   {
     n: "02",
-    t: "Maintained, always",
-    d: "Machines get serviced, cables get replaced, plates go back on the rack. Broken equipment is the fastest way to lose a member.",
+    t: "Clean and maintained",
+    d: "A tidy, well-ventilated floor and equipment that is looked after — it is what members mention first.",
   },
   {
     n: "03",
     t: "Coaching over selling",
-    d: "Our trainers are on the floor to correct technique, not to upsell you a plan you do not need.",
+    d: "Personal training here is led by a trainer who is on the floor to fix technique, not to upsell.",
   },
   {
     n: "04",
     t: "Open when you are free",
-    d: "Early mornings before class, late nights after work — the door stays open across the hours H-13 actually trains.",
+    d: "Early mornings before class, late nights after work — Club X is open 24 hours a day, 7 days a week.",
   },
 ];
 
 const STORY = [
   {
     year: "The idea",
-    t: "A gym H-13 was missing",
-    d: "H-13 was filling up with students and young professionals, and the nearest serious gym meant a drive. Club X started as an answer to that: put a proper training floor inside the sector itself.",
+    t: "Fun N Fitness",
+    d: "Club X was built on a simple line: fun and fitness under one roof. A proper training floor for H-13, and somewhere to actually hang out once the session is done.",
   },
   {
-    year: "The build",
+    year: "The place",
     t: "Two floors under U Tower",
-    d: "We took the B1 and B2 levels of U Tower, opposite NUST Gate 2, and laid out a full strength floor, a cardio line, a functional lane and a snooker hall — with ventilation designed for how hard the room gets used.",
+    d: "We are on the B1 and B2 levels of U Tower, opposite NUST Gate 2 — a gym floor, a snooker floor, a lounge with pool, foosball and PS4, and our own shop.",
   },
   {
     year: "Today",
-    t: "A club, not a gym chain",
-    d: "The desk knows members by name, the trainers know their programmes, and the snooker floor is where half the community actually meets. That is the part we would not trade.",
+    t: "A club that never closes",
+    d: "The doors are open 24/7, there is a ladies timing every day from 11 AM to 3 PM, and the snooker tables are back and busy. That is the part we would not trade.",
   },
 ];
 
@@ -63,11 +64,10 @@ export default function AboutPage() {
         eyebrow="About"
         title="Built in H-13. Built to be used."
         description={site.description}
-        image="https://images.unsplash.com/photo-1540497077202-7c8a3999166f"
         meta={[
           { k: "Location", v: "U Tower, H-13" },
           { k: "Floors", v: "B1 & B2" },
-          { k: "Under one roof", v: "Gym · Snooker · Lounge" },
+          { k: "Open", v: "24 / 7" },
         ]}
       />
 
@@ -80,24 +80,25 @@ export default function AboutPage() {
           <div className="lg:col-span-5">
             <SectionHeading
               eyebrow="Our story"
-              title="How Club X got here"
-              description="No franchise, no imported blueprint. Club X was put together by people who train, for a sector that needed somewhere to train."
+              title="What Club X is about"
+              description={`No franchise, no imported blueprint — a local club led by CEO Rizwan Shah, for a sector that needed somewhere to train and somewhere to play.`}
             />
 
             <Reveal delay={0.15} className="relative mt-10 aspect-4/3 overflow-hidden clip-corner">
               <Image
-                src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?q=80&w=1400"
-                alt="Training session on the Club X floor"
+                src={venueGames}
+                alt="The lounge at Club X — pool and foosball tables"
                 fill
+                placeholder="blur"
                 sizes="(max-width: 1024px) 100vw, 40vw"
-                className="object-cover opacity-70 [filter:grayscale(0.7)]"
+                className="object-cover"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-ink to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-ink/70 to-transparent" />
             </Reveal>
           </div>
 
           <div className="lg:col-span-7">
-            <Reveal className="relative space-y-px border-l border-line pl-8" stagger={0.14}>
+            <Reveal className="relative space-y-px border-l border-line pl-8" stagger>
               {STORY.map((s) => (
                 <div key={s.year} className="relative pb-10 last:pb-0">
                   <span className="absolute -left-[2.15rem] top-1.5 h-2.5 w-2.5 rotate-45 bg-brand" />
@@ -114,7 +115,7 @@ export default function AboutPage() {
       </section>
 
       <Marquee
-        items={["No Excuses", "Train Hard", "Stay Consistent", "Club X"]}
+        items={["Fun N Fitness", "Train Hard", "Open 24/7", "Club X"]}
         variant="outline"
         speed="slow"
         className="border-y border-line bg-ink-2 py-8"
@@ -123,7 +124,7 @@ export default function AboutPage() {
       {/* ---------- Values ---------- */}
       <section className="relative overflow-hidden bg-ink py-24 lg:py-32">
         <div
-          className="pointer-events-none absolute -right-20 top-1/4 h-96 w-96 rounded-full bg-brand/10 blur-[130px]"
+          className="glow pointer-events-none absolute -right-40 top-1/4 h-[520px] w-[520px] opacity-60"
           aria-hidden
         />
         <div className="container-x relative">
@@ -133,7 +134,7 @@ export default function AboutPage() {
             align="center"
           />
 
-          <Reveal className="mt-14 grid gap-px border border-line bg-line sm:grid-cols-2" stagger={0.1}>
+          <Reveal className="mt-14 grid gap-px border border-line bg-line sm:grid-cols-2" stagger>
             {VALUES.map((v) => (
               <article
                 key={v.n}
